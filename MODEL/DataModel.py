@@ -96,7 +96,7 @@ def updateData (Id, Row):
        Returns:
            none
     """
-    config.data.iloc[[int(Id)]] = Row
+    config.data.iloc[int(Id), :] = Row
 
 def deleteData (Id):
     """ Will delete the data from provided ID with row
