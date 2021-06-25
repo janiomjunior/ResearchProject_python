@@ -2,7 +2,7 @@
 Author: Janio Mendonca Junior
 Course: CST8334 - Spring2021
 Date: 25/06/2021
-Version: 1.0
+Version: 2.0
 """
 import unittest
 import config
@@ -13,11 +13,22 @@ global df1
 global df2
 
 class Test(unittest.TestCase):
+    """
+        this module test will check if the parsing was correctly made by checking the if the data is placed
+        on the correct column data type
+        Actually will check if the data in memory has 100 rows
 
-#this module test will check if the parsing was correctly made by checking the if the data is placed
-#on the correct column data type
-#Actually will check if the data in memory has 100 rows
+        Parameters: a calling to the unittest.TestCase
+
+    """
     def test_parsing(self):
+        """
+            this function test will check if the correct data type were parsed on the right column
+            this function will also check if the 100 rows were parsed
+
+            :return: none
+        """
+
         config.data = DataModel.readFile(config.filePath)
         cols_to_check_num = ['pruid','numtoday','numprob','numdeaths','numtotal','numtoday','ratetotal']
         # will cehck if the columns from cols_to_check_num are numeric type
@@ -28,10 +39,16 @@ class Test(unittest.TestCase):
         #Will check if the size parsed is the specified for 100 rows
         self.assertEqual(100, len(config.data))
 
-#this module will check if the function inseertData defined on MODULE will correctly insert data at the
-#end of the data parsed in memory. The module will do it by comparing the data frame size by reading at
-#first time and by inserting a new row.
+
     def test_insertData(self):
+        """
+            this module will check if the function insertData defined on MODEL layer will correctly insert data at the
+            end of the dataFrame parsed in memory. The module will do it by comparing the data frame size. Will read
+            the dataFrame size first, after insert a new row and check each column to see if the properly data was
+            inserted
+
+            :return: none
+        """
         row = {'pruid': 11, 'prname': 'TestUnit', 'prnameFR': 'TestUnit', 'date': '1111-11-11', 'numconf': 11, 'numprob': 11,
                'numdeaths': 11, 'numtotal': 11, 'numtoday': 11, 'ratetotal': 11}
         config.data = DataModel.readFile(config.filePath)
@@ -39,7 +56,6 @@ class Test(unittest.TestCase):
         DataModel.insertData(row)
         df2 = len(config.data)
         self.assertNotEqual(df1, df2)
-        # pruid_lastValue = config.data.pruid[len(config.data)-1]
         self.assertEqual(config.data.pruid[len(config.data)-1], 11)
         self.assertEqual(config.data.prname[len(config.data)-1], 'TestUnit')
         self.assertEqual(config.data.prnameFR[len(config.data)-1], 'TestUnit')
@@ -54,6 +70,12 @@ class Test(unittest.TestCase):
 #this module will check if the the function updateData() from MODEL, properly update the row index 5,
 #by checking the data before run the function and after run the updateData().
     def test_updateData(self):
+        """
+            this module will check if the  function updateData() from MODEL layer, properly update the row index 5,
+            by checking the data before run the function and after run the updateData().
+
+            :return: none
+        """
         row = [11, 'TestUnit', 'TestUnit', '1111-11-11', 11, 11, 11, 11, 11, 11]
         df1 = config.data.iloc[[5]]
         self.assertNotEqual(config.data.pruid[5], 11)
@@ -81,15 +103,25 @@ class Test(unittest.TestCase):
 #This module will check if the size of the data parsed in memory has one position lees after
 #run the function deleteData from DataModel.
     def test_deleteData(self):
+        """
+            This module will check if the size of the data parsed in memory has one position less after
+            run the function deleteData from DataModel.
+
+            :return: none
+        """
         config.data = DataModel.readFile(config.filePath)
         df1 = len(config.data)
         DataModel.deleteData(5)
         df2 = len(config.data)
         self.assertNotEqual(df1, df2)
 
-#this module will check if the the function readFile(filePath) from DataModel will porperly raise a
-#exception when the file path is wrong
     def test_readFileTryCatch(self):
+        """
+            this module will check if the the function readFile(filePath) from DataModel will porperly raise a
+            exception when the file path is wrong
+
+            :return: none
+        """
         filePath = "/Users/janiomjunior/pythonProject/Assignment_2/covid19.csv"
         self.assertRaises(TypeError, DataModel.readFile(filePath))
 

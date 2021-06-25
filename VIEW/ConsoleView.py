@@ -2,7 +2,7 @@
 Author: Janio Mendonca Junior
 Course: CST8334 - Spring2021
 Date: 25/06/2021
-Version: 1.0
+Version: 2.0
 
 This file is responsible for all the user iterations and compose the VIEW layer of MVC pattern.
 """
@@ -61,7 +61,7 @@ def printMenu():
             none
         Returns:
             choice: the character selected
-        """
+    """
     print("Program By JANIO MENDONCA JUNIOR")
     choice = input("Please enter a option: \n(a) view all data\n(v) view one data\n"
     + "(m) view multiples\n(i) insert data\n(u) update data\n(d) delete data\n(n) Create a new .csv file\n(x) exit program\n: ")
@@ -70,20 +70,20 @@ def printMenu():
 def printDataset():
     """Print the entire dataset parsed
 
-            Args:
-                none
-            Returns:
-                none
-            """
+        Args:
+            none
+        Returns:
+            none
+    """
     print(config.data.head(105))
 
 def viewOne():
     """show just one row of dataset in memory
 
-            Args:
-                none
-            Returns:
-                none
+        Args:
+            none
+        Returns:
+            none
     """
     Id = input("Please enter the row ID: ")
     print("--------")
@@ -93,12 +93,12 @@ def viewOne():
 def viewMany():
     """show multiples rows based on user input
 
-                Args:
-                    none
-                Returns:
-                    none
+        Args:
+            none
+        Returns:
+            none
         """
-    #the user will input many row to be print
+    #the user will input many row to be printed
     inputRow = input("please enter with the row ID's ex: 2, 3, 5, 6, 7: ")
     #the program will find only numbers from the string input and create a list of numbers to be passed
     rowNumbers = re.findall(r'[\d.]+', inputRow)
@@ -108,7 +108,15 @@ def viewMany():
     print(DataController.getManyRows(rowNumbers))
     print("--------")
 
-def dataValidation(date_input):
+def dateValidation(date_input):
+    """ will validate the date from user input
+
+        Args:
+            date_input: date entered by user
+        Returns:
+            True: for a valid format YYYY-MM-DD
+            False: for a invalid format
+    """
     format = "%Y-%m-%d"
     try:
         datetime.strptime(date_input, format)
@@ -118,6 +126,13 @@ def dataValidation(date_input):
         return False
 
 def intOrStringValidation(data_input):
+    """ will validate the data input from user
+        Args:
+            data_input: number or string entered by user
+        Returns:
+            True: for a number format
+            False: for a string format
+    """
     #will check ig the input is a number
     if data_input.strip().isdigit():
         return True
@@ -126,7 +141,12 @@ def intOrStringValidation(data_input):
         return False
 
 def inputNumberChecking (Validation):
-
+    """ will be asking for a validate number
+                            Args:
+                                data_input: input from user
+                            Returns:
+                                none
+    """
     while Validation==False:
         user_input = input("INVALID input.....Enter a number: ")
         Validation = intOrStringValidation(user_input)
@@ -134,6 +154,12 @@ def inputNumberChecking (Validation):
     return
 
 def inputStringChecking (Validation):
+    """ will be asking for a validate string
+                                Args:
+                                    data_input: input from user
+                                Returns:
+                                    none
+    """
 
     while Validation==True:
         user_input = input("INVALID input.....Enter a String: ")
@@ -142,7 +168,12 @@ def inputStringChecking (Validation):
     return
 
 def ColumnValues():
-
+    """ Will be storing the inputs from user in properly arrays
+                                Args:
+                                    none
+                                Returns:
+                                    none
+        """
     global pruid, prname, prnameFR, date, numconf, numprob, numdeaths, numtotal, numtoday, ratetotal
 
     #Error checking implemented for the inputs
@@ -161,9 +192,9 @@ def ColumnValues():
     prnameFR = prnameFR_input
 
     date_input = input("Enter with the date (YYYY-MM-DD): ")
-    while dataValidation(date_input) == False:
+    while dateValidation(date_input) == False:
         user_input = input("INVALID date....Enter a valid Date: ")
-        dataValidation(user_input)
+        dateValidation(user_input)
         date_input = user_input
     date = date_input
 
@@ -193,9 +224,16 @@ def ColumnValues():
     print("--------------------")
 
 def askId() -> int:
+    """ will be asking for ID input
+        Args:
+            data_input: Id entered by the user
+        Returns:
+            Id: computed Id
+    """
     exists = False
     while exists == False:
         Id = input("Please enter a Valid row ID: ")
+        #will check if there is the Id on memory DataFrame
         exists = int(Id) in config.data.index
         if exists:
             print("The Line " + Id + ":")
@@ -208,6 +246,12 @@ def askId() -> int:
 
 
 def insert():
+    """ will call the function insert from CONTROLLER.DataController and pass a row to be inserted
+            Args:
+                none
+            Returns:
+                none
+    """
     ColumnValues()
     row = {'pruid': pruid, 'prname': prname, 'prnameFR': prnameFR, 'date': date, 'numconf': numconf, 'numprob': numprob,
             'numdeaths': numdeaths, 'numtotal': numtotal, 'numtoday': numtoday, 'ratetotal': ratetotal}
@@ -218,32 +262,60 @@ def insert():
     print(row)
 
 def update():
+    """ will call the function insert from CONTROLLER.DataController and pass a row to be inserted
+                Args:
+                    none
+                Returns:
+                    none
+    """
     index = askId()
     ColumnValues()
     row = [pruid, prname, prnameFR, date, numconf, numprob, numdeaths, numtotal, numtoday, ratetotal]
 
-    # will call the method update from layer CONTROLLER and boolean false meaning dont create a new file.
+    # will call the method update from layer CONTROLLER
     # the array will be passed to the function for update the values.
     DataController.update(index, row)
     print("Row " + index + " Was Updated")
 
 def delete():
+    """ will call the function delete from CONTROLLER.DataController and pass a Id to be deleted
+                    Args:
+                        none
+                    Returns:
+                        none
+    """
     index = askId()
     DataController.delete(index)
     print("Row " + index + " Was Deleted")
     print("--------------------")
 
 def createNewCsv():
+    """ will call the function createNewCsv from CONTROLLER.DataController
+                        Args:
+                            none
+                        Returns:
+                            none
+    """
     DataController.createNewCsv()
     print("the new CSV was created! ")
 
-#this function will load the .csv in memory DataFrame
 def initDataFrame(filePath):
+    """ this function will load the .csv in memory DataFrame
+                            Args:
+                                none
+                            Returns:
+                                none
+    """
     config.data = DataModel.readFile(filePath)
 
-#Will define the method to be called depending on the user choice
+#
 def defineChoice ( choice ):
-
+    """ Will define the method to be called depending on the user choice
+                                Args:
+                                    none
+                                Returns:
+                                    none
+    """
     if (choice == ConsoleView.SHOW_ALL_DATA.value):
         print(" option a ")
         printDataset()
