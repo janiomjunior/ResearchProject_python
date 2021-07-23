@@ -2,7 +2,8 @@
 Author: Janio Mendonca Junior
 Course: CST8334 - Spring2021
 Date: 25/06/2021
-Version: 2.0
+Assignment 3
+Version: 3.0
 """
 import unittest
 import config
@@ -21,37 +22,19 @@ class Test(unittest.TestCase):
         Parameters: a calling to the unittest.TestCase
 
     """
-    def test_parsing(self):
-        """
-            this function test will check if the correct data type were parsed on the right column
-            this function will also check if the 100 rows were parsed
-
-            :return: none
-        """
-
-        config.data = DataModel.readFile(config.filePath)
-        cols_to_check_num = ['pruid','numtoday','numprob','numdeaths','numtotal','numtoday','ratetotal']
-        # will cehck if the columns from cols_to_check_num are numeric type
-        assert all(ptypes.is_numeric_dtype(config.data[col]) for col in cols_to_check_num)
-        # will cehck if the columns from cols_to_check_string are numeric type
-        cols_to_check_string = ['prname', 'prnameFR','date']
-        assert all(ptypes.is_string_dtype(config.data[col]) for col in cols_to_check_string)
-        #Will check if the size parsed is the specified for 100 rows
-        self.assertEqual(100, len(config.data))
-
 
     def test_insertData(self):
         """
             this module will check if the function insertData defined on MODEL layer will correctly insert data at the
-            end of the dataFrame parsed in memory. The module will do it by comparing the data frame size. Will read
-            the dataFrame size first, after insert a new row and check each column to see if the properly data was
+            database. The module will do it by comparing the data frame size. Will read
+            the COVID19 table size first, after insert a new row and check each column to see if the properly data was
             inserted
 
             :return: none
         """
         row = {'pruid': 11, 'prname': 'TestUnit', 'prnameFR': 'TestUnit', 'date': '1111-11-11', 'numconf': 11, 'numprob': 11,
                'numdeaths': 11, 'numtotal': 11, 'numtoday': 11, 'ratetotal': 11}
-        config.data = DataModel.readFile(config.filePath)
+        DataModel.readFile(config.filePath)
         df1 = len(config.data)
         DataModel.insertData(row)
         df2 = len(config.data)
@@ -67,16 +50,15 @@ class Test(unittest.TestCase):
         self.assertEqual(config.data.numtoday[len(config.data)-1], 11)
         self.assertEqual(config.data.ratetotal[len(config.data)-1], 11)
 
-#this module will check if the the function updateData() from MODEL, properly update the row index 5,
-#by checking the data before run the function and after run the updateData().
     def test_updateData(self):
         """
-            this module will check if the  function updateData() from MODEL layer, properly update the row index 5,
-            by checking the data before run the function and after run the updateData().
+            this module will check if the  function updateData() from MODEL layer, properly update the row index 5
+            on the database side by checking the data before run the function and after run the updateData().
 
             :return: none
         """
-        row = [11, 'TestUnit', 'TestUnit', '1111-11-11', 11, 11, 11, 11, 11, 11]
+        row = {'pruid': 11, 'prname': 'TestUnit', 'prnameFR': 'TestUnit', 'date': '1111-11-11', 'numconf': 11,
+               'numprob': 11, 'numdeaths': 11, 'numtotal': 11, 'numtoday': 11, 'ratetotal': 11}
         df1 = config.data.iloc[[5]]
         self.assertNotEqual(config.data.pruid[5], 11)
         self.assertNotEqual(config.data.prname[5], 'TestUnit')
@@ -100,16 +82,14 @@ class Test(unittest.TestCase):
         self.assertEqual(config.data.numtoday[5], 11)
         self.assertEqual(config.data.ratetotal[5], 11)
 
-#This module will check if the size of the data parsed in memory has one position lees after
-#run the function deleteData from DataModel.
     def test_deleteData(self):
         """
-            This module will check if the size of the data parsed in memory has one position less after
+            This module will check if the size of the data persisted in the database has one position less after
             run the function deleteData from DataModel.
 
             :return: none
         """
-        config.data = DataModel.readFile(config.filePath)
+        DataModel.readFile(config.filePath)
         df1 = len(config.data)
         DataModel.deleteData(5)
         df2 = len(config.data)

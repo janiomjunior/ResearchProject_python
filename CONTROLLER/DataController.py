@@ -9,6 +9,8 @@ the CONTROLLER get information from VIEW, pass it to MODEL and reply MODEL back.
 """
 from MODEL import DataModel
 
+
+
 def getOneRow(RowId):
     """ Will call the function getOneRow() from MODEL layer
 

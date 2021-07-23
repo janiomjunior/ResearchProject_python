@@ -2,7 +2,8 @@
 Author: Janio Mendonca Junior
 Course: CST8334 - Spring2021
 Date: 25/06/2021
-Version: 2.0
+Assignment 3
+Version: 3.0
 
 This file is responsible for all the user iterations and compose the VIEW layer of MVC pattern.
 """
@@ -11,9 +12,12 @@ import enum
 import re
 from datetime import datetime
 
+import pandas as pd
+
 from MODEL import DataModel
 from CONTROLLER import DataController
 import config
+
 
 class ConsoleView(enum.Enum) :
     '''
@@ -35,6 +39,8 @@ class ConsoleView(enum.Enum) :
     DELETE_DATA = "d"
     NEW_FILE = "n"
     EXIT = "x"
+
+
 
 def showMenu():
     """Call the menu options and step out the program
@@ -75,7 +81,7 @@ def printDataset():
         Returns:
             none
     """
-    print(config.data.head(105))
+    print(config.data.to_string(index=False))
 
 def viewOne():
     """show just one row of dataset in memory
@@ -85,10 +91,14 @@ def viewOne():
         Returns:
             none
     """
-    Id = input("Please enter the row ID: ")
-    print("--------")
-    print(DataController.getOneRow(Id))
-    print("--------")
+    Id = askId()
+    #print("--------")
+
+    row = DataController.getOneRow(Id)
+
+    #print("--------")
+    #print(row.to_string(index=False))
+    #print("--------")
 
 def viewMany():
     """show multiples rows based on user input
@@ -105,7 +115,8 @@ def viewMany():
     for i in range(0, len(rowNumbers)):
         rowNumbers[i] = int(rowNumbers[i])
     print("--------")
-    print(DataController.getManyRows(rowNumbers))
+    DataController.getManyRows(rowNumbers)
+    print(config.row.to_string(index=False))
     print("--------")
 
 def dateValidation(date_input):
@@ -133,7 +144,7 @@ def intOrStringValidation(data_input):
             True: for a number format
             False: for a string format
     """
-    #will check ig the input is a number
+    #will check if the input is a number
     if data_input.strip().isdigit():
         return True
     #will return false in case of a number
@@ -142,10 +153,10 @@ def intOrStringValidation(data_input):
 
 def inputNumberChecking (Validation):
     """ will be asking for a validate number
-                            Args:
-                                data_input: input from user
-                            Returns:
-                                none
+        Args:
+            data_input: input from user
+        Returns:
+            none
     """
     while Validation==False:
         user_input = input("INVALID input.....Enter a number: ")
@@ -155,10 +166,10 @@ def inputNumberChecking (Validation):
 
 def inputStringChecking (Validation):
     """ will be asking for a validate string
-                                Args:
-                                    data_input: input from user
-                                Returns:
-                                    none
+        Args:
+            data_input: input from user
+        Returns:
+            none
     """
 
     while Validation==True:
@@ -169,11 +180,11 @@ def inputStringChecking (Validation):
 
 def ColumnValues():
     """ Will be storing the inputs from user in properly arrays
-                                Args:
-                                    none
-                                Returns:
-                                    none
-        """
+        Args:
+            none
+        Returns:
+            none
+    """
     global pruid, prname, prnameFR, date, numconf, numprob, numdeaths, numtotal, numtoday, ratetotal
 
     #Error checking implemented for the inputs
@@ -238,7 +249,8 @@ def askId() -> int:
         if exists:
             print("The Line " + Id + ":")
             print("--------------------")
-            print(DataController.getOneRow(Id))
+            row = DataController.getOneRow(Id)
+            print(row.to_string(index=False))
             print("--------------------")
             return Id
         else:
@@ -270,7 +282,8 @@ def update():
     """
     index = askId()
     ColumnValues()
-    row = [pruid, prname, prnameFR, date, numconf, numprob, numdeaths, numtotal, numtoday, ratetotal]
+    row = {'pruid': pruid, 'prname': prname, 'prnameFR': prnameFR, 'date': date, 'numconf': numconf, 'numprob': numprob,
+            'numdeaths': numdeaths, 'numtotal': numtotal, 'numtoday': numtoday, 'ratetotal': ratetotal}
 
     # will call the method update from layer CONTROLLER
     # the array will be passed to the function for update the values.
@@ -306,7 +319,8 @@ def initDataFrame(filePath):
                             Returns:
                                 none
     """
-    config.data = DataModel.readFile(filePath)
+
+    DataModel.readFile(filePath)
 
 #
 def defineChoice ( choice ):

@@ -9,6 +9,7 @@ This file is responsible to keep the global variables to be used between the pac
 import pandas as pd
 
 #initializing variables for global use
+row = pd.DataFrame()
 data = pd.DataFrame()
-filePath = "/Users/janiomjunior/pythonProject/Assignment_2/Covid19-download.csv"
-newFilePath = "/Users/janiomjunior/pythonProject/Assignment_2/NewCovid19-download.csv"
+filePath = "/Users/janiomjunior/Research_programming/Covid19-download.csv"
+newFilePath = "/Users/janiomjunior/Research_programming/New_Covid19-download.csv"
