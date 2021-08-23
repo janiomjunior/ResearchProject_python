@@ -1,9 +1,9 @@
 """
 Author: Janio Mendonca Junior
 Course: CST8334 - Spring2021
-Date: 25/06/2021
-Assignment 3
-Version: 3.0
+Date: 29/07/2021
+Assignment 4
+Version: 4.0
 
 This file is responsible to make the MODEL part of MVC, where all the Database access are done, such as
 the CRUD operations and communications with controller.
@@ -11,9 +11,9 @@ the CRUD operations and communications with controller.
 import sqlite3
 import pandas as pd
 from pandas import DataFrame
+import matplotlib.pyplot as plt
 import sys
 import config
-
 
 def readFile(filePath):
         """ this function will read the .csv file inside the work folder, named covid19-download.csv
@@ -159,6 +159,33 @@ def deleteData (Id):
     config.data = DataFrame(c.fetchall(), columns=['index', 'pruid', 'prname', 'prnameFR', 'date', 'numconf', 'numprob',
                                                    'numdeaths', 'numtotal', 'numtoday', 'ratetotal'])
 
+def plotPieChart(pieType, pieState, pieDateStart, pieDateEnd):
+    """ Will plot a pie chart based on the information provided by the user
+
+           Args:
+                pieType: If the pie chart will be Deaths, Cases or Probable cases
+                pieState: Which state other than ontario the user wants the plotting
+                pieDateStart: start date
+                pieDateEnd: end date
+           Returns:
+               none
+        """
+    if (pieState.lower() == "c" ):
+        pieState = "Canada"
+    filteredDF = config.data[(config.data["prname"] == "Ontario") | (config.data["prname"] == pieState.title()) & (config.data["date"] >= pieDateStart) & (config.data["date"] <= pieDateEnd)]
+    if(pieType == "c"):
+        filteredDF.groupby(['prname']).sum().plot(kind='pie', y='numconf', autopct='%1.0f')
+        plt.xlabel('Number of confirmed cases ' + "from " + pieDateStart + " to " + pieDateEnd)
+        plt.ylabel('')
+    if(pieType == "d"):
+        filteredDF.groupby(['prname']).sum().plot(kind='pie', y='numdeaths', autopct='%1.0f')
+        plt.xlabel('Number of deaths ' + "from " + pieDateStart + " to " + pieDateEnd)
+        plt.ylabel('')
+    plt.title("Covid 19")
+    plt.show()
+
+    print(filteredDF)
+    return
 
 def createNewCsv():
     """ Will create new file with the modified DataFrame

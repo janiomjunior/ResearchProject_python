@@ -63,6 +63,19 @@ def delete(Id):
     """
     DataModel.deleteData(Id)
 
+def plotPieChart(pieType, pieState, pieDateStart, pieDateEnd):
+    """ Will call the function plotPieChart from MODEL layer
+
+                Args:
+                    pieType: If the pie chart will be Deaths, Cases or Probable cases
+                    pieState: Which state other than ontario the user wants the plotting
+                    pieDateStart: start date
+                    pieDateEnd: end date
+                Returns:
+                    none
+        """
+    DataModel.plotPieChart(pieType, pieState, pieDateStart, pieDateEnd)
+
 def createNewCsv():
     """ Will call the function createNewCsv() from MODEL layer
             Args:

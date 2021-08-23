@@ -28,6 +28,7 @@ class ConsoleView(enum.Enum) :
     "u" value for option update
     "d" value for option delete
     "n" value for new file
+    "p" value for pie chart
     "x" value for exit value
     '''
 
@@ -38,6 +39,7 @@ class ConsoleView(enum.Enum) :
     UPDATE_DATA = "u"
     DELETE_DATA = "d"
     NEW_FILE = "n"
+    PIE_CHART = "p"
     EXIT = "x"
 
 
@@ -70,7 +72,7 @@ def printMenu():
     """
     print("Program By JANIO MENDONCA JUNIOR")
     choice = input("Please enter a option: \n(a) view all data\n(v) view one data\n"
-    + "(m) view multiples\n(i) insert data\n(u) update data\n(d) delete data\n(n) Create a new .csv file\n(x) exit program\n: ")
+    + "(m) view multiples\n(i) insert data\n(u) update data\n(d) delete data\n(p) plot pie chart\n(n) Create a new .csv file\n(x) exit program\n: ")
     return choice
 
 def printDataset():
@@ -302,6 +304,26 @@ def delete():
     print("Row " + index + " Was Deleted")
     print("--------------------")
 
+def plotPieChart():
+    """ will call the function plotPieChart from CONTROLLER.DataController and pass
+        the selecte user options
+                        Args:
+                            none
+                        Returns:
+                            none
+        """
+    print("The Pie Chart will be comparing the COVID19 cases, deaths or testes"
+          "\n from ONTARIO with whole Canada or other province")
+    pieType = input("Type what Pie Chart do you want to see:"
+          +"\n Number of confirmed Cases (c)"
+          +"\n Number of Deaths (d)\n")
+    pieState = input("Type the province name or C for Canada: ")
+    pieDateStart = input("Enter with the Start date format: YYYY-MM-DD: ")
+    dateValidation(pieDateStart)
+    pieDateEnd = input("Enter with the End date format: YYYY-MM-DD: ")
+    dateValidation(pieDateEnd)
+    DataController.plotPieChart(pieType, pieState, pieDateStart, pieDateEnd)
+
 def createNewCsv():
     """ will call the function createNewCsv from CONTROLLER.DataController
                         Args:
@@ -351,6 +373,9 @@ def defineChoice ( choice ):
     if(choice == ConsoleView.NEW_FILE.value):
         createNewCsv()
         print("option n")
+    if (choice == ConsoleView.PIE_CHART.value):
+        plotPieChart()
+        print("option p")
 
 
 if __name__ == "__main__":
